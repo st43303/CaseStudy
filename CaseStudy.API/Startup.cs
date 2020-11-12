@@ -6,9 +6,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace CaseStudy.API
@@ -26,6 +29,35 @@ namespace CaseStudy.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            var contact = new OpenApiContact()
+            {
+                Name = "Miloslav Moravec",
+                Email = "mila.moravec@email.cz",
+                Url = new Uri("https://www.alza.cz")
+            };
+
+            var license = new OpenApiLicense()
+            {
+                Name = "My License",
+                Url = new Uri("https://www.alza.cz")
+            };
+
+            var info = new OpenApiInfo()
+            {
+                Version = "v1",
+                Title = "Swagger Demo API",
+                Description = "Swagger API for Alza products",
+                Contact = contact,
+                License = license
+            };
+
+            services.AddSwaggerGen(g => {
+                g.SwaggerDoc("v1", info);
+                var filePath = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                filePath = Path.Combine(AppContext.BaseDirectory, filePath);
+                g.IncludeXmlComments(filePath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +77,12 @@ namespace CaseStudy.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(s =>
+            {
+                s.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Demo API v1");
             });
         }
     }
