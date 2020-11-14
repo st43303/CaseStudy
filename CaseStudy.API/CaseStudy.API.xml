@@ -4,22 +4,52 @@
         <name>CaseStudy.API</name>
     </assembly>
     <members>
-        <member name="T:CaseStudy.API.Controllers.ValuesController">
+        <member name="T:CaseStudy.API.Controllers.ProductsController">
             <summary>
-            Můj první controller
+            Managing products
             </summary>
         </member>
-        <member name="M:CaseStudy.API.Controllers.ValuesController.GetStrings">
+        <member name="M:CaseStudy.API.Controllers.ProductsController.CreateProduct(CaseStudy.Domain.Models.ProductModel)">
             <summary>
-            Moje první metoda
+            Create a new product
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CaseStudy.API.Controllers.ProductsController.GetProduct(System.Guid)">
+            <summary>
+            Get product by ID
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CaseStudy.API.Controllers.ProductsController.GetProducts">
+            <summary>
+            Get all products
             </summary>
             <returns></returns>
         </member>
-        <member name="M:CaseStudy.API.Controllers.ValuesController.GetStringById(System.Int32)">
+        <member name="M:CaseStudy.API.Controllers.ProductsController.GetProductsForPage(System.Int32,System.Int32)">
             <summary>
-            Moje druhá metoda
+            Get products for specified page
+            </summary>
+            <param name="pageNumber">The number of the required page. The first page number is 0</param>
+            <param name="pageSize">The number of products per page</param>
+            <returns></returns>
+        </member>
+        <member name="M:CaseStudy.API.Controllers.ProductsController.DeleteProduct(System.Guid)">
+            <summary>
+            Delete product by ID
             </summary>
             <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CaseStudy.API.Controllers.ProductsController.UpdateDescription(System.Guid,System.String)">
+            <summary>
+            Update the description of product
+            </summary>
+            <param name="id"></param>
+            <param name="description"></param>
             <returns></returns>
         </member>
     </members>

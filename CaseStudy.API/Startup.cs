@@ -1,7 +1,11 @@
+using AutoMapper;
+using CaseStudy.Data;
+using CaseStudy.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,7 +32,11 @@ namespace CaseStudy.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(Configuration);
+            services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("CaseStudyConnection")));
             services.AddControllers();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             var contact = new OpenApiContact()
             {
@@ -52,7 +60,8 @@ namespace CaseStudy.API
                 License = license
             };
 
-            services.AddSwaggerGen(g => {
+            services.AddSwaggerGen(g =>
+            {
                 g.SwaggerDoc("v1", info);
                 var filePath = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 filePath = Path.Combine(AppContext.BaseDirectory, filePath);
@@ -70,6 +79,12 @@ namespace CaseStudy.API
 
             app.UseHttpsRedirection();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(s =>
+            {
+                s.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Demo API v1");
+            });
+
             app.UseRouting();
 
             app.UseAuthorization();
@@ -79,11 +94,7 @@ namespace CaseStudy.API
                 endpoints.MapControllers();
             });
 
-            app.UseSwagger();
-            app.UseSwaggerUI(s =>
-            {
-                s.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Demo API v1");
-            });
+        
         }
     }
 }
