@@ -15,7 +15,8 @@ namespace CaseStudy.API.Controllers
     /// <summary>
     /// Managing products
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/v{v:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
@@ -140,6 +141,7 @@ namespace CaseStudy.API.Controllers
         /// <param name="pageSize">The number of products per page</param>
         /// <returns></returns>
         [HttpGet("search")]
+        [ApiVersion("2.0")]
         [ProducesResponseType(typeof(IList<ProductModel>), 200)]
         [ProducesResponseType(typeof(IDictionary<string, string[]>), 400)]
         [ProducesResponseType(401)]

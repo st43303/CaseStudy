@@ -5,12 +5,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,6 +26,7 @@ namespace CaseStudy.API
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -33,44 +38,40 @@ namespace CaseStudy.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(Configuration);
+
             services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("CaseStudyConnection")));
+
             services.AddControllers();
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            var contact = new OpenApiContact()
+            services.AddApiVersioning(opt =>
             {
-                Name = "Miloslav Moravec",
-                Email = "mila.moravec@email.cz",
-                Url = new Uri("https://www.alza.cz")
-            };
+                opt.ReportApiVersions = true;
+            });
 
-            var license = new OpenApiLicense()
+            services.AddVersionedApiExplorer(opt =>
             {
-                Name = "My License",
-                Url = new Uri("https://www.alza.cz")
-            };
+                opt.GroupNameFormat = "'v'VVV";
+                opt.SubstituteApiVersionInUrl = true;
+            });
 
-            var info = new OpenApiInfo()
-            {
-                Version = "v1",
-                Title = "Swagger Demo API",
-                Description = "Swagger API for Alza products",
-                Contact = contact,
-                License = license
-            };
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
-            services.AddSwaggerGen(g =>
+            services.AddSwaggerGen(opt =>
             {
-                g.SwaggerDoc("v1", info);
+                opt.OperationFilter<SwaggerDefaultValues>();
                 var filePath = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 filePath = Path.Combine(AppContext.BaseDirectory, filePath);
-                g.IncludeXmlComments(filePath);
+                opt.IncludeXmlComments(filePath);
             });
+
+            services.AddScoped<IProductRepository, ProductRepository>();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -80,9 +81,12 @@ namespace CaseStudy.API
             app.UseHttpsRedirection();
 
             app.UseSwagger();
-            app.UseSwaggerUI(s =>
+            app.UseSwaggerUI(opt =>
             {
-                s.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Demo API v1");
+                foreach(var description in provider.ApiVersionDescriptions)
+                {
+                    opt.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                }
             });
 
             app.UseRouting();
