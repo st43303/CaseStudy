@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaseStudy.Domain", "CaseStu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaseStudy.Data", "CaseStudy.Data\CaseStudy.Data.csproj", "{14F0D3F2-526F-4437-8ECF-97CA0B5C7672}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaseStudy.Common", "CaseStudy.Common\CaseStudy.Common.csproj", "{027C45E1-8667-40DC-A3CF-5651C5CECD36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaseStudy.Common", "CaseStudy.Common\CaseStudy.Common.csproj", "{027C45E1-8667-40DC-A3CF-5651C5CECD36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaseStudy.Test", "CaseStudy.Test\CaseStudy.Test.csproj", "{C43ADAAE-EACA-426A-8DCB-21632CEB2157}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{027C45E1-8667-40DC-A3CF-5651C5CECD36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{027C45E1-8667-40DC-A3CF-5651C5CECD36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{027C45E1-8667-40DC-A3CF-5651C5CECD36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C43ADAAE-EACA-426A-8DCB-21632CEB2157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C43ADAAE-EACA-426A-8DCB-21632CEB2157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C43ADAAE-EACA-426A-8DCB-21632CEB2157}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C43ADAAE-EACA-426A-8DCB-21632CEB2157}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
