@@ -13,6 +13,10 @@ namespace CaseStudy.API
         public AutoMapperProfile()
         {
             CreateMap<Product, ProductModel>();
+            CreateMap<ProductModel, Product>()
+                .ForMember(dest=>dest.Created, opt=>opt.Ignore())
+                .ForMember(dest=>dest.Modified, opt=>opt.Ignore())
+                ;
         }
     }
 }

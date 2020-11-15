@@ -3,6 +3,7 @@ using CaseStudy.Data.Entities;
 using CaseStudy.Data.Repositories;
 using CaseStudy.Domain.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -135,7 +136,7 @@ namespace CaseStudy.API.Controllers
         }
 
         /// <summary>
-        /// Get products for specified page
+        /// Get products by specified page
         /// </summary>
         /// <param name="pageNumber">The number of the required page. The first page number is 0</param>
         /// <param name="pageSize">The number of products per page</param>
@@ -156,7 +157,7 @@ namespace CaseStudy.API.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var products = await _productRepository.GetProducts(pageNumber, pageSize);
+                var products = await _productRepository.GetProductsByPage(pageNumber, pageSize);
 
                 return Ok(_mapper.Map<IList<ProductModel>>(products));
             }catch(Exception ex)
@@ -211,7 +212,7 @@ namespace CaseStudy.API.Controllers
         /// Update the description of product
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="description"></param>
+        /// <param name="patchDoc"></param>
         /// <returns></returns>
         [HttpPatch("{id}")]
         [ProducesResponseType(204)]
@@ -220,7 +221,7 @@ namespace CaseStudy.API.Controllers
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateDescription([FromRoute] Guid id, [FromQuery] string description)
+        public async Task<IActionResult> Patch([FromRoute] Guid id, [FromBody] JsonPatchDocument<ProductModel> patchDoc)
         {
             try
             {
@@ -235,9 +236,13 @@ namespace CaseStudy.API.Controllers
                     return NotFound();
                 }
 
-                product.Description = description;
+                var productModel = _mapper.Map<ProductModel>(product);
 
-                var result = await _productRepository.UpdateProductDescription(id, product.Description);
+                patchDoc.ApplyTo(productModel);
+
+                _mapper.Map(productModel, product);
+
+                var result = await _productRepository.UpdateProduct(id, product);
                 if (!result)
                 {
                     return NotFound();

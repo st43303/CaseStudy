@@ -1,5 +1,6 @@
 ﻿using CaseStudy.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,12 @@ namespace CaseStudy.Data.Repositories
         /// <returns></returns>
         Task<IEnumerable<Product>> GetProducts();
         /// <summary>
-        /// Get products on page
+        /// Get products by specified page
         /// </summary>
-        /// <param name="pages"></param>
+        /// <param name="pageNumber">The number of the required page. The first page number is 0</param>
+        /// <param name="pageSize">The number of products per page</param>
         /// <returns></returns>
-        Task<IEnumerable<Product>> GetProducts(int pageNumber, int pageSize = 10);
+        Task<IEnumerable<Product>> GetProductsByPage(int pageNumber, int pageSize = 10);
         /// <summary>
         /// Get product specified by id
         /// </summary>
@@ -28,11 +30,11 @@ namespace CaseStudy.Data.Repositories
         /// <returns></returns>
         Task<Product> GetProductById(Guid id);
         /// <summary>
-        /// Update product´s description
+        /// Update product
         /// </summary>
         /// <param name="id"></param>
         /// <param name="description"></param>
-        Task<bool> UpdateProductDescription(Guid id, string description);
+        Task<bool> UpdateProduct(Guid id, Product product);
         /// <summary>
         /// Create a new product
         /// </summary>
@@ -49,64 +51,111 @@ namespace CaseStudy.Data.Repositories
     public class ProductRepository : IProductRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger _logger;
 
-        public ProductRepository(ApplicationDbContext context)
+        public ProductRepository(ApplicationDbContext context, ILogger<ProductRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
         public async Task<Guid> CreateProduct(Product product)
         {
-            await _context.Products.AddAsync(product);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.Products.AddAsync(product);
+                await _context.SaveChangesAsync();
 
-            return product.Id;
+                return product.Id;
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, "CreateProduct");
+                throw ex;
+            }
         }
 
         public async Task<bool> DeleteProduct(Guid id)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(i => i.Id == id);
-            if(product == null)
+            try
             {
-                return false;
+                var product = await _context.Products.FirstOrDefaultAsync(i => i.Id == id);
+                if (product == null)
+                {
+                    return false;
+                }
+
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, "DeleteProduct");
+                throw ex;
             }
-
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
-
-            return true;
         }
 
         public async Task<Product> GetProductById(Guid id)
         {
-            return await _context.Products.FirstOrDefaultAsync(i => i.Id == id);
+            try
+            {
+                return await _context.Products.FirstOrDefaultAsync(i => i.Id == id);
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, "GetProductById");
+                throw ex;
+            }
         }
 
         public async Task<IEnumerable<Product>> GetProducts()
         {
-            return await _context.Products.ToListAsync();
-        }
-
-        public async Task<IEnumerable<Product>> GetProducts(int pageNumber, int pageSize = 10)
-        {
-            return await _context.Products.Skip(pageNumber * pageSize).Take(pageSize).ToListAsync();
-        }
-
-        public async Task<bool> UpdateProductDescription(Guid id, string description)
-        {
-            var product = await _context.Products.FirstOrDefaultAsync(i => i.Id == id);
-
-            if (product == null)
+            try
             {
-                return false;
+                return await _context.Products.ToListAsync();
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, "GetProducts");
+                throw ex;
             }
+        }
 
-            product.Description = description;
-            product.Modified = DateTime.Now;
+        public async Task<IEnumerable<Product>> GetProductsByPage(int pageNumber, int pageSize = 10)
+        {
+            try
+            {
+                return await _context.Products.Skip(pageNumber * pageSize).Take(pageSize).ToListAsync();
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, "GetProductsByPage");
+                throw ex;
+            }
+        }
 
-            _context.Entry(product).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+        public async Task<bool> UpdateProduct(Guid id, Product product)
+        {
+            try
+            {
+                var oldProduct = await _context.Products.FirstOrDefaultAsync(i => i.Id == id);
 
-            return true;
+                if (oldProduct == null || oldProduct.Id != product.Id)
+                {
+                    return false;
+                }
+
+                oldProduct.Description = product.Description;
+                oldProduct.ImgUri = product.ImgUri;
+                oldProduct.Name = product.Name;
+                oldProduct.Price = product.Price;
+                oldProduct.Modified = DateTime.Now;
+
+                _context.Entry(oldProduct).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return true;
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, "UpdateProductDescription");
+                throw ex;
+            }
         }
     }
 }

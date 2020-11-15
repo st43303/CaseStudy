@@ -13,13 +13,13 @@ namespace CaseStudy.API
 {
     public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
     {
-        //private readonly ILogger _logger;
+        private readonly ILogger _logger;
         readonly IApiVersionDescriptionProvider _provider;
 
-        public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider)
+        public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider, ILogger<ConfigureSwaggerOptions> logger)
         {
             _provider = provider;
-            //_logger = logger;
+            _logger = logger;
         }
         public void Configure(SwaggerGenOptions options)
         {
@@ -30,7 +30,7 @@ namespace CaseStudy.API
                     options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
                 }catch(Exception ex)
                 {
-                    //_logger.LogError(ex, "ConfigureSwaggerOptions");
+                    _logger.LogError(ex, "ConfigureSwaggerOptions");
                 }
             }
         }

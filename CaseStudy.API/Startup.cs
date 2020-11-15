@@ -41,7 +41,7 @@ namespace CaseStudy.API
 
             services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("CaseStudyConnection")));
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
 
             services.AddApiVersioning(opt =>
             {
