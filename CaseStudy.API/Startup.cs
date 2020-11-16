@@ -1,4 +1,5 @@
 using AutoMapper;
+using CaseStudy.API.Swagger;
 using CaseStudy.Data;
 using CaseStudy.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -97,8 +98,7 @@ namespace CaseStudy.API
             {
                 endpoints.MapControllers();
             });
-
-        
+     
         }
     }
 }

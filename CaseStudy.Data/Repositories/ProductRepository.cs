@@ -122,8 +122,9 @@ namespace CaseStudy.Data.Repositories
         {
             try
             {
-                return await _context.Products.Skip(pageNumber * pageSize).Take(pageSize).ToListAsync();
-            }catch(Exception ex)
+                return await _context.Products.OrderBy(o => o.Name).Skip(pageNumber * pageSize).Take(pageSize).ToListAsync();
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "GetProductsByPage");
                 throw ex;

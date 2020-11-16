@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CaseStudy.API\CaseStudy.API.csproj" />
-    <ProjectReference Include="..\CaseStudy.Data\CaseStudy.Data.csproj" />
   </ItemGroup>
 
 </Project>

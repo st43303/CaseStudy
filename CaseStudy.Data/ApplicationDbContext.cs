@@ -21,9 +21,9 @@ namespace CaseStudy.Data
             var random = new Random();
             var range = 100000;
 
-            for(var i = 0; i< 50; i++)
+            for (var i = 0; i < 50; i++)
             {
-                var productNumber = i + 1;
+                var productNumber = GetProductNumber(i + 1);
                 products.Add(new Product
                 {
                     Id = Guid.NewGuid(),
@@ -35,6 +35,15 @@ namespace CaseStudy.Data
                 });
             }
             modelBuilder.Entity<Product>().HasData(products);
+        }
+
+        private string GetProductNumber(int number)
+        {
+            if(number < 10)
+            {
+                return "0" + number;
+            }
+            return number.ToString();
         }
     }
 }

@@ -141,7 +141,7 @@ namespace CaseStudy.API.Controllers
         /// <param name="pageNumber">The number of the required page. The first page number is 0</param>
         /// <param name="pageSize">The number of products per page</param>
         /// <returns></returns>
-        [HttpGet("search")]
+        [HttpGet("page")]
         [ApiVersion("2.0")]
         [ProducesResponseType(typeof(IList<ProductModel>), 200)]
         [ProducesResponseType(typeof(IDictionary<string, string[]>), 400)]

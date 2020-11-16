@@ -24,4 +24,5 @@ namespace CaseStudy.Domain.Models
 
         public string Description { get; set; }
     }
+ 
 }
