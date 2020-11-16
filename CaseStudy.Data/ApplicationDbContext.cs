@@ -27,9 +27,9 @@ namespace CaseStudy.Data
                 products.Add(new Product
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Produkt " + productNumber,
+                    Name = "Product " + productNumber,
                     Created = DateTime.Now,
-                    Description = "Popis k produktu č. " + productNumber,
+                    Description = "The description of product " + productNumber,
                     ImgUri = "https://cdn.alza.cz/Foto/" + productNumber,
                     Price = (decimal)Math.Round(random.NextDouble() * range, 2)
                 });

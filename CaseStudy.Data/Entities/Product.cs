@@ -8,8 +8,8 @@ namespace CaseStudy.Data.Entities
 {
     public class Product : BaseAuditing
     {
-        [Required]
         [Key]
+        [Required]
         public Guid Id { get; set; }
 
         [Required]
@@ -19,9 +19,9 @@ namespace CaseStudy.Data.Entities
         public string ImgUri { get; set; }
 
         [Required]
-        [Range(0, double.MaxValue)]
-        [Column(TypeName ="decimal(18,2")]
+        [Column(TypeName ="decimal(18,2)")]
         public decimal Price { get; set; }
+
         public string Description { get; set; }
     }
 }

@@ -11,7 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaseStudy.Data", "CaseStudy
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaseStudy.Common", "CaseStudy.Common\CaseStudy.Common.csproj", "{027C45E1-8667-40DC-A3CF-5651C5CECD36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaseStudy.Test", "CaseStudy.Test\CaseStudy.Test.csproj", "{C43ADAAE-EACA-426A-8DCB-21632CEB2157}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaseStudy.Test", "CaseStudy.Test\CaseStudy.Test.csproj", "{C43ADAAE-EACA-426A-8DCB-21632CEB2157}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B96A1832-F702-40C1-B5B3-4F9EBD5D7E39}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -24,6 +24,10 @@ namespace CaseStudy.Test.Controllers
 
         #region GetProducts
 
+        /// <summary>
+        /// Test if get method will return status code 200 OK
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task GetAllProducts()
         {
@@ -35,7 +39,11 @@ namespace CaseStudy.Test.Controllers
         #endregion //GetProducts
 
         #region GetProductsForPage
-        
+
+        /// <summary>
+        /// Test if get method will return status code 200 OK
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task GetProductsForPage()
         {
@@ -43,6 +51,10 @@ namespace CaseStudy.Test.Controllers
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
         }
 
+        /// <summary>
+        /// Test if get method will return status code 500 when the page number has a bad value
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task GetProductsForBadNumberPage()
         {
@@ -54,6 +66,10 @@ namespace CaseStudy.Test.Controllers
 
         #region GetProduct
 
+        /// <summary>
+        /// Test if get method will return status code 404 when there is no product with this ID
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task GeProductByBadId()
         {
@@ -66,14 +82,18 @@ namespace CaseStudy.Test.Controllers
 
         #region CreateProduct
 
+        /// <summary>
+        /// Test if post method will return status code 201 Created
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task CreateProduct()
         {
             var product = new ProductModel
             {
-                Description = "Popis k testovacímu produktu",
+                Description = "The description of test product",
                 ImgUri = "image.png",
-                Name = "Testovací produkt",
+                Name = "Test product",
                 Price = 100
             };
 
@@ -84,12 +104,16 @@ namespace CaseStudy.Test.Controllers
             Assert.Equal(System.Net.HttpStatusCode.Created, response.StatusCode);
         }
 
+        /// <summary>
+        /// Test if post method will return status code 400 bad request when the product name is missing
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task CreateProductWithoutName()
         {
             var product = new ProductModel
             {
-                Description = "Popis k testovacímu produktu",
+                Description = "The description of test product",
                 ImgUri = "image.png",
                 Price = 100
             };
@@ -101,14 +125,18 @@ namespace CaseStudy.Test.Controllers
             Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
         }
 
+        /// <summary>
+        /// Test if post method will return status code 400 bad request when the product price has a bad value
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task CreateProductWithBadPrice()
         {
             var product = new ProductModel
             {
-                Description = "Popis k testovacímu produktu II",
+                Description = "The description of test product II",
                 ImgUri = "image2.png",
-                Name = "Testovací produkt II",
+                Name = "Test product II",
                 Price = -50
             };
 
@@ -122,14 +150,18 @@ namespace CaseStudy.Test.Controllers
         #endregion // CreateProduct
 
         #region Patch
+        /// <summary>
+        /// Creating a new product and then updating by new value of description
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task UpdateDescriptionOfCreatedProduct()
         {
             var product = new ProductModel
             {
-                Description = "Popis k testovacímu produktu",
+                Description = "The description of test product",
                 ImgUri = "image.png",
-                Name = "Testovací produkt",
+                Name = "Test product",
                 Price = 100
             };
 
@@ -140,7 +172,7 @@ namespace CaseStudy.Test.Controllers
             var createdProduct = JsonConvert.DeserializeObject<ProductModel>(await response.Content.ReadAsStringAsync());
             var productId = createdProduct.Id;
 
-            var document = new JsonPatchDocument<ProductModel>().Replace(i => i.Description, "Nový testovací popis");
+            var document = new JsonPatchDocument<ProductModel>().Replace(i => i.Description, "The new description of test product");
 
             var serializedDocument = JsonConvert.SerializeObject(document);
             var patchContent = new StringContent(serializedDocument, Encoding.UTF8, "application/json-patch+json");

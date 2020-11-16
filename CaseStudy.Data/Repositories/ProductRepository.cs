@@ -45,7 +45,6 @@ namespace CaseStudy.Data.Repositories
         /// </summary>
         /// <param name="id"></param>
         Task<bool> DeleteProduct(Guid id);
-
     }
 
     public class ProductRepository : IProductRepository
@@ -78,6 +77,7 @@ namespace CaseStudy.Data.Repositories
             try
             {
                 var product = await _context.Products.FirstOrDefaultAsync(i => i.Id == id);
+
                 if (product == null)
                 {
                     return false;
